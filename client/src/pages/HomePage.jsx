@@ -1,7 +1,23 @@
 import { useGetAllTendersQuery } from "@/redux/api/adminApiSlice";
+import { useEffect, useState } from "react";
 
 const HomePage = () => {
   const { data, error, isLoading } = useGetAllTendersQuery();
+  const [notification, setNotification] = useState(null);
+
+  useEffect(() => {
+    if (data) {
+      const tenders = data.tenders;
+      const now = new Date();
+      const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+      const recentTenders = tenders.filter(
+        (tender) => new Date(tender.createdAt) > fiveMinutesAgo
+      );
+      if (recentTenders.length > 0) {
+        setNotification(`New tender(s) placed in the last 5 minutes!`);
+      }
+    }
+  }, [data]);
 
   if (isLoading) {
     return (
@@ -25,6 +41,11 @@ const HomePage = () => {
   return (
     <div className="container mx-auto p-4 pt-6 mt-10">
       <h1 className="text-3xl font-bold mb-4">Tenders</h1>
+      {notification && (
+        <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-4">
+          {notification}
+        </div>
+      )}
       <table className="w-full table-auto">
         <thead className="bg-gray-100">
           <tr>
