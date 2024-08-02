@@ -7,6 +7,7 @@ const authenticateUser = async (req, res, next) => {
 
   // Read JWT from the 'jwt' cookie
   token = req.headers.authorization.split(" ")[1];
+  console.log(token);
 
   if (token) {
     try {

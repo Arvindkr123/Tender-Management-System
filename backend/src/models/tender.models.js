@@ -26,6 +26,10 @@ const tenderSchema = new Schema(
       required: true,
       min: 0,
     },
+    lowestQuote: {
+      type: Number,
+      min: 0,
+    },
   },
   {
     timestamps: true,

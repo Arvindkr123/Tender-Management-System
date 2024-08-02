@@ -3,6 +3,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import authenticateUser from "./middleware/verifyToken.middleware.js";
+import { updateSingleTenderController } from "./controllers/admin.controllers.js";
 
 const app = express();
 
@@ -19,9 +21,5 @@ app.use(cookieParser());
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/admin", adminRoutes);
-
-app.use("*", (req, res) => {
-  res.status(404).json({ success: false, error: "not found route" });
-});
 
 export default app;

@@ -13,10 +13,24 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
+
     getAllTenders: builder.query({
       query: () => `${adminApiPrefix}/get-all-tenders`,
+    }),
+
+    submitQuotation: builder.mutation({
+      query: ({ tenderId, quotation }) => ({
+        url: `${adminApiPrefix}/update-tender/${tenderId}`,
+        method: "PUT",
+        body: { quotation }, // Wrap the quotation value in an object
+        credentials: "include",
+      }),
     }),
   }),
 });
 
-export const { useAddTenderMutation, useGetAllTendersQuery } = adminApiSlice;
+export const {
+  useAddTenderMutation,
+  useGetAllTendersQuery,
+  useSubmitQuotationMutation,
+} = adminApiSlice;

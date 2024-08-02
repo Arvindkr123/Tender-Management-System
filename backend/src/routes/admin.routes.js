@@ -5,9 +5,16 @@ import authenticateUser, {
 import {
   addTenderController,
   getAllTenderController,
+  updateSingleTenderController,
 } from "../controllers/admin.controllers.js";
 
 const router = Router();
+
+router.put(
+  "/update-tender/:id",
+  authenticateUser,
+  updateSingleTenderController
+);
 
 router.post(
   "/add-tender",
