@@ -3,8 +3,6 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
-import authenticateUser from "./middleware/verifyToken.middleware.js";
-import { updateSingleTenderController } from "./controllers/admin.controllers.js";
 
 const app = express();
 

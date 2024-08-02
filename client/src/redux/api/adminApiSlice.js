@@ -18,6 +18,10 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       query: () => `${adminApiPrefix}/get-all-tenders`,
     }),
 
+    getAllBidsByUser: builder.query({
+      query: () => `${adminApiPrefix}/get-all-userbids`,
+    }),
+
     submitQuotation: builder.mutation({
       query: ({ tenderId, quotation }) => ({
         url: `${adminApiPrefix}/update-tender/${tenderId}`,
@@ -33,4 +37,5 @@ export const {
   useAddTenderMutation,
   useGetAllTendersQuery,
   useSubmitQuotationMutation,
+  useGetAllBidsByUserQuery,
 } = adminApiSlice;

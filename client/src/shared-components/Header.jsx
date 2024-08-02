@@ -37,7 +37,7 @@ const Header = () => {
       >
         TMS
       </h2>
-      <ul className="flex gap-1">
+      <ul className="flex gap-5">
         {!userInfo ? (
           <>
             <li>
@@ -60,7 +60,18 @@ const Header = () => {
         ) : (
           <>
             <li>
-              <button className="primary-btn" onClick={toggleDropdown}>
+              <button
+                className="primary-btn"
+                onClick={() => navigate("/user/bids")}
+              >
+                <span className="text-white">User Bids</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="primary-btn"
+                onClick={isAdmin && toggleDropdown}
+              >
                 <span className="text-white">{userInfo.name}</span>
               </button>
             </li>

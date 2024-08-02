@@ -40,6 +40,15 @@ export const getAllTenderController = async (req, res) => {
   }
 };
 
+export const getAllBidsByUserController = async (req, res) => {
+  try {
+    const tenders = await TenderModel.find().sort({ lowestQuote: 1 });
+    res.status(200).json({ success: true, tenders });
+  } catch (error) {
+    res.status(500).json({ success: false, errror: "Internal server error" });
+  }
+};
+
 export const updateSingleTenderController = async (req, res) => {
   try {
     console.log(req.body);

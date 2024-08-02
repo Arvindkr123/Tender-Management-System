@@ -10,6 +10,7 @@ import PrivateRoute from "./pages/privateRoute";
 import NotFound from "./pages/NotFound";
 import { useSelector } from "react-redux";
 import HomePage from "./pages/HomePage";
+import UserBidsPage from "./pages/UserBidsPage";
 
 const AppLayout = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -40,6 +41,7 @@ const AppLayout = () => {
           <Route path="/signup" element={<Register />} />
           <Route path="" element={<PrivateRoute />}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/user/bids" element={<UserBidsPage />} />
             {userInfo && userInfo?.role === "admin" && (
               <>
                 <Route path="/admin/addTender" element={<TenderForm />} />
