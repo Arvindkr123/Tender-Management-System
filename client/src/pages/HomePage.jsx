@@ -1,4 +1,5 @@
 import {
+  useGetAllBidsByUserQuery,
   useGetAllTendersQuery,
   useSubmitQuotationMutation,
 } from "@/redux/api/adminApiSlice";
@@ -9,6 +10,7 @@ const HomePage = () => {
   const [notification, setNotification] = useState(null);
   const [quotations, setQuotations] = useState({});
   const [submitQuotation] = useSubmitQuotationMutation();
+  const { refetch: userBidsRefetch } = useGetAllBidsByUserQuery();
 
   useEffect(() => {
     if (data) {
@@ -39,9 +41,10 @@ const HomePage = () => {
     }
 
     try {
-      const res = await submitQuotation({ tenderId, quotation }).unwrap();
+      await submitQuotation({ tenderId, quotation }).unwrap();
       refetch();
-      console.log(res);
+      userBidsRefetch();
+      //console.log(res);
       //alert("Quotation submitted successfully!");
     } catch (error) {
       console.error(error);

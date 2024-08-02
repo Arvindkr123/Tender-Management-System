@@ -60,6 +60,11 @@ const Header = () => {
         ) : (
           <>
             <li>
+              <button className="primary-btn" onClick={() => navigate("/")}>
+                <span className="text-white">Add Bid</span>
+              </button>
+            </li>
+            <li>
               <button
                 className="primary-btn"
                 onClick={() => navigate("/user/bids")}
