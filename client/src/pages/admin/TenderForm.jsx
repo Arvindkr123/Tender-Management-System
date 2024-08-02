@@ -7,20 +7,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { parse } from "date-fns";
+
 import { Input } from "@/components/ui/input";
-import { setCredentials } from "@/redux/features/auth/authSlice";
-import Loader from "@/shared-components/Loader";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import Cookies from "js-cookie";
-import axios from "axios";
-import { useAddTenderMutation } from "@/redux/api/adminApiSlice";
+import {
+  useAddTenderMutation,
+  useGetAllTendersQuery,
+} from "@/redux/api/adminApiSlice";
 
 // Define the form schema
 const tenderFormSchema = z.object({
@@ -39,8 +38,7 @@ const tenderFormSchema = z.object({
 
 // Define the Login component
 const TenderForm = () => {
-  const userInfo = useSelector((state) => state.auth.userInfo);
-  console.log(userInfo);
+  //console.log(userInfo);
   const form = useForm({
     resolver: zodResolver(tenderFormSchema),
     defaultValues: {
@@ -53,14 +51,18 @@ const TenderForm = () => {
   });
 
   const [addTender] = useAddTenderMutation();
+  const { refetch } = useGetAllTendersQuery();
+  const navigate = useNavigate();
 
   const onSubmit = async (values) => {
     try {
-      const headers = {
-        Authorization: `Bearer ${userInfo.token}`,
-      };
-      const res = await addTender(values, { headers }).unwrap();
-      console.log(res);
+      const res = await addTender(values).unwrap();
+      //console.log(res);
+      if (res.success) {
+        refetch();
+        navigate("/");
+        toast.success(res.message);
+      }
     } catch (error) {
       console.error(error);
     }

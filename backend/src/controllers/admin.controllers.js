@@ -30,3 +30,12 @@ export const addTenderController = async (req, res) => {
     res.status(500).json({ success: false, error: "Internal server error" });
   }
 };
+
+export const getAllTenderController = async (req, res) => {
+  try {
+    const tenders = await TenderModel.find();
+    res.status(200).json({ success: true, tenders });
+  } catch (error) {
+    res.status(500).json({ success: false, errror: "Internal server error" });
+  }
+};

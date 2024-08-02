@@ -31,7 +31,12 @@ const Header = () => {
 
   return (
     <nav className="h-[60px] flex w-full bg-slate-900 text-white p-3 justify-between items-center">
-      <h2 className="font-bold text-xl cursor-pointer select-none">TMS</h2>
+      <h2
+        className="font-bold text-xl cursor-pointer select-none"
+        onClick={() => navigate("/")}
+      >
+        TMS
+      </h2>
       <ul className="flex gap-1">
         {!userInfo ? (
           <>
