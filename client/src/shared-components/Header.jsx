@@ -30,7 +30,7 @@ const Header = () => {
   const isAdmin = userInfo && userInfo.role === "admin";
 
   return (
-    <nav className="h-[60px] flex w-full bg-slate-900 text-white p-3 justify-between items-center">
+    <nav className="fixed top-0 h-[60px] flex w-full bg-slate-900 text-white p-3 justify-between items-center">
       <h2
         className="font-bold text-xl cursor-pointer select-none"
         onClick={() => navigate("/")}
