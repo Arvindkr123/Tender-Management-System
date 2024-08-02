@@ -7,23 +7,21 @@ const UserBidsPage = () => {
 
   useEffect(() => {
     if (data) {
-      const tenders = data.tenders;
+      const bids = data.tenders; // Assuming the data structure is like this
       const now = new Date();
       const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
-      const recentTenders = tenders.filter(
-        (tender) => new Date(tender.updatedAt) > fiveMinutesAgo
+      const recentBids = bids.filter(
+        (bid) => new Date(bid.updatedAt) > fiveMinutesAgo
       );
-      if (recentTenders.length > 0) {
+      if (recentBids.length > 0) {
         setNotification(`New Bids placed in the last 5 minutes!`);
       }
     }
   }, [data]);
 
-  //console.log(notification);
-
   return (
     <div className="container mx-auto p-4 pt-6 mt-10">
-      <h1 className="text-3xl font-bold mb-4">Bids Managements</h1>
+      <h1 className="text-3xl font-bold mb-4">Bids Management</h1>
       {notification && (
         <div
           className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-4"
@@ -42,15 +40,15 @@ const UserBidsPage = () => {
           </tr>
         </thead>
         <tbody>
-          {data?.tenders?.map((tender, index) => (
-            <tr key={tender._id} className="border-b border-gray-200">
+          {data?.tenders?.map((bid, index) => (
+            <tr key={bid._id} className="border-b border-gray-200">
               <td className="px-4 py-2">{index + 1}</td>
-              <td className="px-4 py-2">{tender.tenderName}</td>
+              <td className="px-4 py-2">{bid.tenderName}</td>
               <td className="px-4 py-2">
-                {new Date(tender.updatedAt).toLocaleString()}
+                {new Date(bid.updatedAt).toLocaleString()}
               </td>
               <td className="px-4 py-2">
-                {tender.lowestQuote ? tender.lowestQuote : "N/A"}
+                {bid.lowestQuote ? bid.lowestQuote : "N/A"}
               </td>
             </tr>
           ))}

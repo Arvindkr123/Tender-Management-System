@@ -72,7 +72,7 @@ const Login = () => {
 
   return (
     <div className="container  flex flex-col justify-center items-center h-screen">
-      <h4>Login User</h4>
+      <h4 className="text-3xl my-3">Login User</h4>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
