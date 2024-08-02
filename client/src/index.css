@@ -67,3 +67,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+.primary-btn {
+  @apply px-4 py-1 rounded bg-blue-500 transition h-fit hover:bg-blue-600;
+}
+.danger-btn {
+  @apply px-4 py-1 rounded transition h-fit bg-red-500 hover:bg-red-600;
+}

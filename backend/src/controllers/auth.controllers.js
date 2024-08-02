@@ -36,7 +36,12 @@ export const registerUserController = async (req, res, next) => {
       res.status(201).json({
         success: true,
         message: "User registered successfully!",
-        token,
+        user: {
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          token,
+        },
       });
     } catch (error) {
       console.log("Error generating token:", error);
@@ -84,7 +89,12 @@ export const userLoginController = async (req, res, next) => {
       res.status(201).json({
         success: true,
         message: "login user successfully!",
-        token,
+        user: {
+          name: existedUser.name,
+          email: existedUser.email,
+          role: existedUser.role,
+          token,
+        },
       });
     } catch (error) {
       console.log("Error generating token:", error);
@@ -96,10 +106,26 @@ export const userLoginController = async (req, res, next) => {
   }
 };
 
-export const verifyTokenController = async (req, res, next) => {
+export const logoutCurrentUserController = async (req, res, next) => {
+  res.cookie("token", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+
+  res.status(200).json({ success: true, message: "logout successfully" });
+};
+
+export const getCurrentUserProfileController = async (req, res, next) => {
   try {
-    console.log(req.headers);
+    const user = await UserModel.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ success: false, error: "User not found" });
+    }
+
+    res
+      .status(200)
+      .json({ success: true, user: { ...user._doc, password: "" } });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({ success: false, error: "Internal server error" });
   }
 };

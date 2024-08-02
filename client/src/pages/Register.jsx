@@ -8,10 +8,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAuthContext } from "@/context/AuthProvider";
+import { useRegisterMutation } from "@/redux/api/users";
+import { setCredentials } from "@/redux/features/auth/authSlice";
+import Loader from "@/shared-components/Loader";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { z } from "zod";
 
 // Define the form schema
@@ -26,8 +31,23 @@ const formSchema = z.object({
 });
 
 const Register = () => {
-  const { registerUser } = useAuthContext();
   // Initialize the form with the schema and default values
+  const { userInfo } = useSelector((state) => state.auth);
+  // console.log(userInfo);
+  const { search } = useLocation();
+  const sp = new URLSearchParams(search);
+  const redirect = sp.get("redirect") || "/";
+  // console.log(sp);
+  // console.log(redirect);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [register, { isLoading }] = useRegisterMutation();
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [navigate, redirect, userInfo]);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,8 +58,20 @@ const Register = () => {
   });
 
   // Handle form submission
-  const onSubmit = (values) => {
-    registerUser(values);
+  const onSubmit = async (values) => {
+    //console.log(values);
+    try {
+      const res = await register({ ...values }).unwrap();
+      //console.log(res);
+      if (res.success) {
+        dispatch(setCredentials({ ...res?.user }));
+        navigate(redirect);
+        toast.success(res.message);
+      }
+    } catch (error) {
+      console.log(error.data.error);
+      toast.error(error.data.error);
+    }
   };
 
   return (
@@ -95,9 +127,13 @@ const Register = () => {
           />
 
           {/* Submit button */}
-          <Button type="submit">signup</Button>
+          {isLoading ? <Loader /> : <Button type="submit">signup</Button>}
+
           <p>
-            Already have an account <Link to="/login">Login</Link>
+            Already have an account{" "}
+            <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>
+              Login
+            </Link>
           </p>
         </form>
       </Form>

@@ -8,10 +8,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAuthContext } from "@/context/AuthProvider";
+import { useLoginMutation } from "@/redux/api/users";
+import { setCredentials } from "@/redux/features/auth/authSlice";
+import Loader from "@/shared-components/Loader";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { z } from "zod";
 
 // Define the form schema
@@ -24,7 +29,23 @@ const formSchema = z.object({
 
 // Define the Login component
 const Login = () => {
-  const { loginUser } = useAuthContext();
+  const { userInfo } = useSelector((state) => state.auth);
+  // console.log(userInfo);
+  const { search } = useLocation();
+  const sp = new URLSearchParams(search);
+  const redirect = sp.get("redirect") || "/";
+  // console.log(sp);
+  // console.log(redirect);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [login, { isLoading }] = useLoginMutation();
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [navigate, redirect, userInfo]);
+
   // Initialize the form with the schema and default values
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -35,8 +56,18 @@ const Login = () => {
   });
 
   // Handle form submission
-  const onSubmit = (values) => {
-    loginUser(values);
+  const onSubmit = async (values) => {
+    try {
+      const res = await login(values).unwrap();
+      //console.log(res);
+      if (res.success) {
+        dispatch(setCredentials(res.user));
+        navigate(redirect);
+        toast.success(res.message);
+      }
+    } catch (error) {
+      toast.success(error.data.error);
+    }
   };
 
   return (
@@ -78,9 +109,13 @@ const Login = () => {
           />
 
           {/* Submit button */}
-          <Button type="submit">Login</Button>
+          {isLoading ? <Loader /> : <Button type="submit">Login</Button>}
+
           <p>
-            Do not have an account <Link to="/signup">Signup</Link>
+            Do not have an account{" "}
+            <Link to={redirect ? `/signup?redirect=${redirect}` : "/signup"}>
+              Signup
+            </Link>
           </p>
         </form>
       </Form>
